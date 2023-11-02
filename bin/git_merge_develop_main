@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Merge develop to main (fast-forward only)
+git_checkout_branch() {
+  if ! git checkout "$1"; then
+    echo "👹 Oops! Failed to switch to $1" >&2
+  fi
+}
+
+currBranch="$(git branch --show-current)"
+
+if [[ "$currBranch" != "develop" ]]; then
+  while read -rp "⚠️ WARNING: The current work branch is $currBranch. Do you want me to switch to develop branch now? (yes/no) " answer; do
+    if [[ "$answer" == [nN] || "$answer" == [nN][oO] ]]; then        
+      exit 1
+    elif [[ "$answer" == [yY] || "$answer" == [yY][eE][sS] ]]; then
+      if ! git_checkout_branch "develop"; then
+        exit 1
+      fi
+
+      break
+    fi
+  done
+fi
+
+if ! git_checkout_branch "main"; then
+  return
+fi
+
+if ! git merge --ff-only develop; then
+  echo "👹 Oops! Failed to merge" >&2
+
+  return
+fi
+
+if ! git_checkout_branch "develop"; then
+  return
+fi

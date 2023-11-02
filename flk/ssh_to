@@ -1,6 +1,10 @@
-# Common tasks
+#!/bin/bash
 
-alias ssh_id_flk="ssh -i ~/.ssh/id_flk"
+source ~/.zsh/.env
+
+ssh_id_flk() {
+  ssh -i ~/.ssh/id_flk "$1"
+}
 
 # Ssh into a server by running:
 # ssh_to <name>, e.g. ssh_to ubuntu_for_dx
@@ -18,6 +22,10 @@ ssh_to() {
     fedora_for_dx)
         ssh_id_flk "$FLK_NET_DO_FEDORA_DX_USER_AT"
       ;;
+    arch_for_dx)
+        ssh_id_flk "$FLK_NET_DO_ARCH_DX_USER_AT"
+      ;;
   esac
 }
 
+ssh_to "$1"
